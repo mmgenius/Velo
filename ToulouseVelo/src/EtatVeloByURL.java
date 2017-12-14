@@ -54,8 +54,8 @@ public class EtatVeloByURL{
 	    maliste = new EtatVeloByURL().readJsonFromUrl();
 	    for(int i=0; i<maliste.size(); i++){
 	    	System.out.println(maliste.get(i));
-	    	JSONObject position = new JSONObject(maliste.get(i).getString("position"));
-	    	System.out.println(position.getDouble("lng"));
+	    	JSONObject position = new JSONObject(""+maliste.get(i).get("position"));
+	    	System.out.println(position.getDouble("lng")+", "+position.getDouble("lat"));
 	    	System.out.println();
 	    }
 	   
