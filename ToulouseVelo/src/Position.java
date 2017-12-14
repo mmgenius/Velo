@@ -17,7 +17,7 @@ public class Position {
 	}
 	
 	public String toString(){
-		return "Longitude "+this.longitude+" Latitude "+this.latitude ; 
+		return this.longitude+" , "+this.latitude ; 
 	}
 
 }

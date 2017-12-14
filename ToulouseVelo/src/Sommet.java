@@ -45,7 +45,7 @@ public class Sommet {
 
     @Override
     public String toString() {
-        return name;
+        return this.id+" , "+this.name;
     }
 
 
