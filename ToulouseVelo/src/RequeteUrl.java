@@ -16,9 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EtatVeloByURL{
+public class RequeteUrl{
 	
-	private final String monUrl = "https://api.jcdecaux.com/vls/v1/stations?contract=Toulouse&apiKey=660886648617740220c3a0edefb2cb48f62e3e4e";
+	private String monUrl = "";
+	
+	public RequeteUrl(String url){
+		this.monUrl = url ; 
+	}
 	
 	private static String readAll(Reader rd) throws IOException {
 	    StringBuilder sb = new StringBuilder();
@@ -51,7 +55,7 @@ public class EtatVeloByURL{
 	  
 	  public static void main(String[] args) throws IOException, JSONException {
 		List<JSONObject> maliste; 
-	    maliste = new EtatVeloByURL().readJsonFromUrl();
+	    maliste = new RequeteUrl("").readJsonFromUrl();
 	    for(int i=0; i<maliste.size(); i++){
 	    	System.out.println(maliste.get(i));
 	    	JSONObject position = new JSONObject(""+maliste.get(i).get("position"));

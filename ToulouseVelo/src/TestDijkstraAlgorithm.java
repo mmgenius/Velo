@@ -19,7 +19,8 @@ public class TestDijkstraAlgorithm {
     public void testExcute() throws IOException, JSONException {
         nodes = new ArrayList<Sommet>();
         Arrets = new ArrayList<Arret>();
-        List<JSONObject> etatVelo = new EtatVeloByURL().readJsonFromUrl();
+        String url = "https://api.jcdecaux.com/vls/v1/stations?contract=Toulouse&apiKey=660886648617740220c3a0edefb2cb48f62e3e4e";
+        List<JSONObject> etatVelo = new RequeteUrl(url).readJsonFromUrl();
         for(int i=0; i<etatVelo.size(); i++){
         	String num = etatVelo.get(i).getString("number"); 
         	String nom = etatVelo.get(i).getString("name");
@@ -28,9 +29,9 @@ public class TestDijkstraAlgorithm {
         	String adresse = etatVelo.get(i).getString("address");
         	String status = etatVelo.get(i).getString("status");
         	int nVelo = etatVelo.get(i).getInt("bike_stands");
-        	int nbMarch = etatVelo.get(nVelo).getInt("available_bikes");
         	int nbArr = etatVelo.get(i).getInt("available_bike_stands");
-        	Station uneStation = new Station("Node_"+i+"_"+num, "Node_"+i+"_"+nom, adresse, post, status, nVelo, nbMarch, nbArr);
+        	int nbMarch = (nVelo - nbArr );
+        	Station uneStation = new Station("Node_"+i+"_"+num, "Node_"+i+"_"+nom, adresse, post, status, nVelo, nbArr, nbMarch);
             nodes.add(uneStation);
         }
 
@@ -52,10 +53,25 @@ public class TestDijkstraAlgorithm {
 
         assertNotNull(path);
         assertTrue(path.size() > 0);
-
+        
+        /**
         for (Sommet Sommet : path) {
             System.out.println(Sommet);
         }
+        */
+        ;
+        Station notreOrig = (Station)nodes.get(0);
+        
+        //System.out.println(notreDes);
+        System.out.println(notreOrig);
+        System.out.println(notreOrig.calculerDistance(new Position(1.45907112459247,43.59723540303583))); 
+        
+        /**for(Sommet sommet : nodes){
+        	System.out.println(sommet.toString());
+        	System.out.println();
+        	
+        }
+        */
 
     }
 

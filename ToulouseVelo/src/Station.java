@@ -1,3 +1,18 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 
 public class Station extends Sommet{
 	
@@ -5,8 +20,9 @@ public class Station extends Sommet{
 	private Position position ;
 	public String status ;
 	public int nombreTotalVelo, nombreVeloEnMarche, nombreVeloGare; 
+
 	
-	public Station(String num, String nom, String adresse, Position p, String status, int nVelo, int nbMarche, int nbArret){
+	public Station(String num, String nom, String adresse, Position p, String status, int nVelo, int nbArret, int nbMarche){
 		super(num,nom);
 		this.setAdresse(adresse) ; 
 		this.setPosition(p) ; 
@@ -15,6 +31,55 @@ public class Station extends Sommet{
 		this.nombreVeloEnMarche = nbMarche ; 
 		this.nombreVeloGare = nbArret; 
 		
+	}
+	
+	private static String readAll(Reader rd) throws IOException {
+	    StringBuilder sb = new StringBuilder();
+	    int cp;
+	    while ((cp = rd.read()) != -1) {
+	      sb.append((char) cp);
+	    }
+	    return sb.toString();
+	}
+	
+	public JSONObject readJsonFromUrl(String uri) throws IOException, JSONException {
+	    InputStream is = new URL(uri).openStream();
+	    try {
+	      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+	      String jsonText = readAll(rd);
+	      JSONObject jsonn = new JSONObject(jsonText);
+	      
+	      
+	      return jsonn;
+	    } finally {
+	      is.close();
+	    }
+	  }
+	  
+	
+	
+	public JSONObject calculerDistance(Position destination) throws IOException, JSONException{
+		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+this.position.getLatitude()+","+this.position.getLongitude()+
+						"&destination="+destination.getLatitude()+","+destination.getLongitude()+
+						"&alternatives=true&key=AIzaSyBOI3GbFImyoH9NwlAAgRGnNhs3VWSdwCE";
+		
+		 List<JSONObject> lesObj = new ArrayList<JSONObject>();
+		 JSONObject notreObjet = readJsonFromUrl(url);
+		 String text = notreObjet.getString("routes");
+		 JSONArray table = new JSONArray(text);
+		 for(int i=0; i<table.length(); i++){
+	    	  JSONObject jsonObj = table.getJSONObject(i);
+	    	  lesObj.add(jsonObj);
+	     }
+		
+		  JSONArray distance = new JSONArray(""+lesObj.get(0).get("legs")); 
+		  List<JSONObject> lesObj2 = new ArrayList<JSONObject>();
+		  for(int i=0; i<distance.length(); i++){
+			  JSONObject jsonObj1 = distance.getJSONObject(i);
+			  lesObj2.add(jsonObj1);
+		  }
+		 
+		 return (JSONObject) lesObj2.get(0).get("distance"); 
 	}
 
 	public String getAdresse() {
@@ -31,6 +96,11 @@ public class Station extends Sommet{
 
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+	
+	@Override
+	public String toString(){
+		return "[ "+super.toString()+" , "+"<"+adresse+"> , "+position.toString()+" , "+status+" , Velo:"+nombreTotalVelo+" , Standing:"+nombreVeloGare+" , Running:"+nombreVeloEnMarche+"]";
 	}
 	
 	
