@@ -58,7 +58,7 @@ public class Station extends Sommet{
 	  
 	
 	
-	public JSONObject calculerDistance(Position destination) throws IOException, JSONException{
+	public String calculerDistance(Position destination) throws IOException, JSONException{
 		String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+this.position.getLatitude()+","+this.position.getLongitude()+
 						"&destination="+destination.getLatitude()+","+destination.getLongitude()+
 						"&alternatives=true&key=AIzaSyBOI3GbFImyoH9NwlAAgRGnNhs3VWSdwCE";
@@ -73,13 +73,12 @@ public class Station extends Sommet{
 	     }
 		
 		  JSONArray distance = new JSONArray(""+lesObj.get(0).get("legs")); 
-		  List<JSONObject> lesObj2 = new ArrayList<JSONObject>();
-		  for(int i=0; i<distance.length(); i++){
-			  JSONObject jsonObj1 = distance.getJSONObject(i);
-			  lesObj2.add(jsonObj1);
-		  }
+		  JSONObject jsonObj1 = distance.getJSONObject(0);
+		  JSONObject dist = (JSONObject) jsonObj1.get("distance"); 
+		  String notreDistance = dist.getString("text"); 
 		 
-		 return (JSONObject) lesObj2.get(0).get("distance"); 
+		 
+		 return notreDistance; 
 	}
 
 	public String getAdresse() {

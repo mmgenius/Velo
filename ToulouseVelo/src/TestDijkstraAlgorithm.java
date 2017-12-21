@@ -64,7 +64,7 @@ public class TestDijkstraAlgorithm {
         
         //System.out.println(notreDes);
         System.out.println(notreOrig);
-        System.out.println(notreOrig.calculerDistance(new Position(1.45907112459247,43.59723540303583))); 
+        System.out.println(notreOrig.calculerDistance(new Position(1.418420510391943,43.5955673906372))); 
         
         /**for(Sommet sommet : nodes){
         	System.out.println(sommet.toString());
